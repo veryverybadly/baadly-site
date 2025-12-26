@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang="ru"><head>
+  <meta charset="UTF-8">
+  <title>bad.ly</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+    }
+
+    .logo {
+      font-size: 80px;
+      font-weight: bold;
+      color: #333;
+      cursor: none;
+      user-select: none;
+      letter-spacing: -2px;
+    }
+
+    .logo span {
+      display: inline-block;
+      position: relative;
+    }
+
+    .cursor {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: #aaff00;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0.8;
+      z-index: 10;
+      filter: blur(2px);
+      box-shadow: 0 0 15px #aaff00;
+      transition: opacity 0.2s ease;
+    }
+
+    .links {
+      position: absolute;
+      bottom: 30px;
+      display: flex;
+      gap: 30px; /* Расстояние между ссылками */
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+
+    .links a {
+      color: #777;
+      text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+      padding: 0 5px;
+    }
+
+    .links a:hover {
+      color: #aaff00;
+    }
+
+    .links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #aaff00;
+      transition: width 0.3s;
+    }
+
+    .links a:hover::after {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo" id="logo">
+    <span>b</span><span>a</span><span>d</span><span>.</span><span>l</span><span>y</span>
+  </div>
+  
+  <div class="links">
+    <a href="https://github.com/veryverybadly" target="_blank">github.com/veryverybadly</a>
+    <a href="https://t.me/lydaab" target="_blank">t.me/lydaab</a>
+  </div>
+
+  <div class="cursor" id="cursor"></div>
+
+  <script>
+    const logo = document.getElementById('logo');
+    const cursor = document.getElementById('cursor');
+    const letters = logo.querySelectorAll('span');
+
+    
+    document.body.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+    });
+
+    
+    logo.addEventListener('mouseenter', () => {
+      cursor.style.opacity = '0';
+    });
+
+    logo.addEventListener('mouseleave', () => {
+      cursor.style.opacity = '0.8';
+    });
+
+    
+    logo.addEventListener('mousemove', (e) => {
+      const rect = logo.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      letters.forEach(letter => {
+        const letterRect = letter.getBoundingClientRect();
+        const relativeX = mouseX - (letterRect.left - rect.left);
+        const relativeY = mouseY - (letterRect.top - rect.top);
+
+        if (
+          relativeX >= 0 && 
+          relativeX <= letterRect.width &&
+          relativeY >= 0 && 
+          relativeY <= letterRect.height
+        ) {
+          letter.style.color = '#aaff00';
+          letter.style.textShadow = '0 0 10px #aaff00, 0 0 20px #aaff00';
+        } else {
+          letter.style.color = '';
+          letter.style.textShadow = '';
+        }
+      });
+    });
+
+    
+    logo.addEventListener('mouseleave', () => {
+      letters.forEach(letter => {
+        letter.style.color = '';
+        letter.style.textShadow = '';
+      });
+    });
+  </script>
+
+</body></html>
