@@ -102,13 +102,13 @@
     const cursor = document.getElementById('cursor');
     const letters = logo.querySelectorAll('span');
 
-    // Движение кастомного курсора
+    
     document.body.addEventListener('mousemove', (e) => {
       cursor.style.left = e.clientX + 'px';
       cursor.style.top = e.clientY + 'px';
     });
 
-    // Скрытие курсора при наведении на текст
+    
     logo.addEventListener('mouseenter', () => {
       cursor.style.opacity = '0';
     });
@@ -117,7 +117,7 @@
       cursor.style.opacity = '0.8';
     });
 
-    // Подсветка букв
+    
     logo.addEventListener('mousemove', (e) => {
       const rect = logo.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
@@ -143,7 +143,7 @@
       });
     });
 
-    // Сброс подсветки
+    
     logo.addEventListener('mouseleave', () => {
       letters.forEach(letter => {
         letter.style.color = '';
