@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8" />
+<!DOCTYPE html><html lang="ru"><head>
+  <meta charset="UTF-8">
   <title>bad.ly</title>
   <style>
     * {
@@ -22,7 +20,6 @@
     }
 
     .logo {
-      position: relative;
       font-size: 80px;
       font-weight: bold;
       color: #333;
@@ -32,8 +29,8 @@
     }
 
     .logo span {
-      position: relative;
       display: inline-block;
+      position: relative;
     }
 
     .cursor {
@@ -48,11 +45,14 @@
       z-index: 10;
       filter: blur(2px);
       box-shadow: 0 0 15px #aaff00;
+      transition: opacity 0.2s ease;
     }
 
     .links {
       position: absolute;
       bottom: 30px;
+      display: flex;
+      gap: 30px; /* Расстояние между ссылками */
       font-size: 14px;
       letter-spacing: 2px;
     }
@@ -61,20 +61,38 @@
       color: #777;
       text-decoration: none;
       transition: color 0.3s;
+      position: relative;
+      padding: 0 5px;
     }
 
     .links a:hover {
       color: #aaff00;
     }
+
+    .links a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #aaff00;
+      transition: width 0.3s;
+    }
+
+    .links a:hover::after {
+      width: 100%;
+    }
   </style>
 </head>
 <body>
   <div class="logo" id="logo">
-    b<span>a</span><span>d</span>.<span>l</span><span>y</span>
+    <span>b</span><span>a</span><span>d</span><span>.</span><span>l</span><span>y</span>
   </div>
   
   <div class="links">
     <a href="https://github.com/veryverybadly" target="_blank">github.com/veryverybadly</a>
+    <a href="https://t.me/lydaab" target="_blank">t.me/lydaab</a>
   </div>
 
   <div class="cursor" id="cursor"></div>
@@ -84,13 +102,22 @@
     const cursor = document.getElementById('cursor');
     const letters = logo.querySelectorAll('span');
 
-    // Кастомный курсор
+    // Движение кастомного курсора
     document.body.addEventListener('mousemove', (e) => {
       cursor.style.left = e.clientX + 'px';
       cursor.style.top = e.clientY + 'px';
     });
 
-    // Подсветка букв при наведении
+    // Скрытие курсора при наведении на текст
+    logo.addEventListener('mouseenter', () => {
+      cursor.style.opacity = '0';
+    });
+
+    logo.addEventListener('mouseleave', () => {
+      cursor.style.opacity = '0.8';
+    });
+
+    // Подсветка букв
     logo.addEventListener('mousemove', (e) => {
       const rect = logo.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
@@ -116,6 +143,7 @@
       });
     });
 
+    // Сброс подсветки
     logo.addEventListener('mouseleave', () => {
       letters.forEach(letter => {
         letter.style.color = '';
@@ -123,5 +151,5 @@
       });
     });
   </script>
-</body>
-</html>
+
+</body></html>
