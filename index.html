@@ -22,15 +22,16 @@
     .logo {
       font-size: 80px;
       font-weight: bold;
-      color: #333;
+      color: #1a1a1a;
       cursor: none;
       user-select: none;
       letter-spacing: -2px;
+      display: flex;
     }
 
     .logo span {
       display: inline-block;
-      position: relative;
+      transition: transform 0.1s ease-out, color 0.2s;
     }
 
     .cursor {
@@ -45,7 +46,7 @@
       z-index: 10;
       filter: blur(2px);
       box-shadow: 0 0 15px #aaff00;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.3s ease;
     }
 
     .links {
@@ -58,7 +59,7 @@
     }
 
     .links a {
-      color: #777;
+      color: #444;
       text-decoration: none;
       transition: color 0.3s;
       position: relative;
@@ -83,6 +84,18 @@
     .links a:hover::after {
       width: 100%;
     }
+
+    @keyframes flicker {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; }
+      100% { opacity: 0.9; }
+    }
+
+    .active-letter {
+      color: #aaff00 !important;
+      text-shadow: 0 0 10px #aaff00, 0 0 20px #aaff00;
+      animation: flicker 0.1s infinite;
+    }
   </style>
 </head>
 <body>
@@ -102,54 +115,43 @@
     const cursor = document.getElementById('cursor');
     const letters = logo.querySelectorAll('span');
 
-    
-    document.body.addEventListener('mousemove', (e) => {
+    document.addEventListener('mousemove', (e) => {
       cursor.style.left = e.clientX + 'px';
       cursor.style.top = e.clientY + 'px';
-    });
 
-    
-    logo.addEventListener('mouseenter', () => {
-      cursor.style.opacity = '0';
-    });
-
-    logo.addEventListener('mouseleave', () => {
-      cursor.style.opacity = '0.8';
-    });
-
-    
-    logo.addEventListener('mousemove', (e) => {
-      const rect = logo.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
 
       letters.forEach(letter => {
-        const letterRect = letter.getBoundingClientRect();
-        const relativeX = mouseX - (letterRect.left - rect.left);
-        const relativeY = mouseY - (letterRect.top - rect.top);
+        const rect = letter.getBoundingClientRect();
+        const letterX = rect.left + rect.width / 2;
+        const letterY = rect.top + rect.height / 2;
 
-        if (
-          relativeX >= 0 && 
-          relativeX <= letterRect.width &&
-          relativeY >= 0 && 
-          relativeY <= letterRect.height
-        ) {
-          letter.style.color = '#aaff00';
-          letter.style.textShadow = '0 0 10px #aaff00, 0 0 20px #aaff00';
+        const distX = mouseX - letterX;
+        const distY = mouseY - letterY;
+        const distance = Math.sqrt(distX * distX + distY * distY);
+
+        if (distance < 100) {
+          const force = (100 - distance) / 100;
+          const moveX = (distX / distance) * force * -15;
+          const moveY = (distY / distance) * force * -15;
+          
+          letter.style.transform = `translate(${moveX}px, ${moveY}px)`;
+          letter.classList.add('active-letter');
+          cursor.style.opacity = '0.4';
         } else {
-          letter.style.color = '';
-          letter.style.textShadow = '';
+          letter.style.transform = 'translate(0, 0)';
+          letter.classList.remove('active-letter');
+          cursor.style.opacity = '0.8';
         }
       });
     });
 
-    
     logo.addEventListener('mouseleave', () => {
       letters.forEach(letter => {
-        letter.style.color = '';
-        letter.style.textShadow = '';
+        letter.style.transform = 'translate(0, 0)';
+        letter.classList.remove('active-letter');
       });
     });
   </script>
-
 </body></html>
